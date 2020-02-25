@@ -14,10 +14,10 @@ from azure.storage.blob import BlobServiceClient, BlobClient, ContainerClient
 # It will create concurrent threads based on the number of available cores.
 
 # Set these variables
-total_seconds = 30
+total_seconds = 5
 local_file_path = 'C:\\filestage'
-CONN_STR = '<my account connection string>'
-CONTAINER = '<my account container>'
+CONN_STR = '<my connection string>'
+CONTAINER = '<my container name>'
 
 def send(blob_service_client, file_count):
     global timeout_start
@@ -43,7 +43,9 @@ def send(blob_service_client, file_count):
         file.close()
 
         # Create a blob client using the local file name as the name for the blob
-        blob_client = blob_service_client.get_blob_client(container=CONTAINER, blob=local_file_name)
+        today = datetime.datetime.utcnow()
+        blob_file_name = "mockEvents\\year={0}\\month={1}\\day={2}\\{3}".format(today.year, today.month, today.day, local_file_name)
+        blob_client = blob_service_client.get_blob_client(container=CONTAINER, blob=blob_file_name)
 
         # Upload the created file
         with open(upload_file_path, "rb") as data:
